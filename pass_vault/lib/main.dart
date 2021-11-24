@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pass_vault/providers/auth.dart';
+import 'package:pass_vault/screens/passwords_screen.dart';
+import 'package:provider/provider.dart';
+
 import 'package:pass_vault/screens/auth_init_screen.dart';
 import 'package:pass_vault/screens/login_screen.dart';
 import 'package:pass_vault/screens/welcome_screen.dart';
@@ -15,36 +19,35 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      routes: {
-        '/': (ctx) => _appEntryScreen(),
-        AuthInitScreen.routeName: (ctx) => AuthInitScreen()
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (ctx) => Auth(),
+        )
+      ],
+      child: Consumer<Auth>(
+          builder: (ctx, auth, _) => MaterialApp(
+                title: 'Flutter Demo',
+                theme: ThemeData(
+                  primarySwatch: Colors.blue,
+                ),
+                home: auth.isAuth ? PasswordsScreen() : _appEntryScreen(),
+                routes: {AuthInitScreen.routeName: (ctx) => AuthInitScreen()},
+              )),
     );
   }
 }
 
 Widget _appEntryScreen() {
   return FutureBuilder<SharedPreferences>(
-    future: SharedPreferences.getInstance(),
-    builder: (ctx, snapshot) =>
-      snapshot.connectionState == ConnectionState.waiting
-        ? Center( child: CircularProgressIndicator(),)
-        : snapshot.data!.getString("passvaultinit") == null ?
-        WelcomeScreen() 
-        : LoginScreen()
-  );
+      future: SharedPreferences.getInstance(),
+      builder: (ctx, snapshot) =>
+          snapshot.connectionState == ConnectionState.waiting
+              ? Scaffold(
+                  body: Center(
+                  child: CircularProgressIndicator(),
+                ))
+              : snapshot.data!.getString("passvaultinit") == null
+                  ? WelcomeScreen()
+                  : LoginScreen());
 }
