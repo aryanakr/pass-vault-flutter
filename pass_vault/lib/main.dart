@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pass_vault/providers/auth.dart';
+import 'package:pass_vault/providers/password_entries.dart';
 import 'package:pass_vault/screens/passwords_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -23,31 +24,42 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (ctx) => Auth(),
-        )
+        ),
+        ChangeNotifierProxyProvider<Auth, PasswordEntries>(
+          update: (ctx, auth, previousEntries) => PasswordEntries(
+              auth.authKey ?? '',
+              previousEntries == null ? [] : previousEntries.items),
+          create: (ctx) => PasswordEntries('', []),
+        ),
       ],
       child: Consumer<Auth>(
-          builder: (ctx, auth, _) => MaterialApp(
-                title: 'Flutter Demo',
-                theme: ThemeData(
-                  primarySwatch: Colors.blue,
-                ),
-                home: auth.isAuth ? PasswordsScreen() : _appEntryScreen(),
-                routes: {AuthInitScreen.routeName: (ctx) => AuthInitScreen()},
-              )),
+        builder: (ctx, auth, _) => MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home: auth.isAuth ? PasswordsScreen() : _appEntryScreen(),
+          routes: {
+            AuthInitScreen.routeName: (ctx) => AuthInitScreen(),
+          },
+        ),
+      ),
     );
   }
 }
 
 Widget _appEntryScreen() {
   return FutureBuilder<SharedPreferences>(
-      future: SharedPreferences.getInstance(),
-      builder: (ctx, snapshot) =>
-          snapshot.connectionState == ConnectionState.waiting
-              ? Scaffold(
-                  body: Center(
+    future: SharedPreferences.getInstance(),
+    builder: (ctx, snapshot) =>
+        snapshot.connectionState == ConnectionState.waiting
+            ? const Scaffold(
+                body: Center(
                   child: CircularProgressIndicator(),
-                ))
-              : snapshot.data!.getString("passvaultinit") == null
-                  ? WelcomeScreen()
-                  : LoginScreen());
+                ),
+              )
+            : snapshot.data!.getString("passvaultinit") == null
+                ? WelcomeScreen()
+                : LoginScreen(),
+  );
 }
