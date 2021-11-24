@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pass_vault/providers/auth.dart';
 import 'package:pass_vault/providers/password_entries.dart';
+import 'package:pass_vault/screens/create_password_entry_screen.dart';
 import 'package:pass_vault/screens/passwords_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
           home: auth.isAuth ? PasswordsScreen() : _appEntryScreen(),
           routes: {
             AuthInitScreen.routeName: (ctx) => AuthInitScreen(),
+            CreatePasswordEntryScreen.routeName: (ctx) => CreatePasswordEntryScreen(),
           },
         ),
       ),
