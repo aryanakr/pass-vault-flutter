@@ -6,9 +6,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:string_encryption/string_encryption.dart';
 
 class ListEntryPasswordWidget extends StatefulWidget {
-  final String password;
+  final Future<String> Function(String authKey) getPassword;
+  final String authKey;
 
-  ListEntryPasswordWidget(this.password);
+  ListEntryPasswordWidget(this.getPassword, this.authKey);
 
   @override
   _ListEntryPasswordWidgetState createState() =>
@@ -23,24 +24,6 @@ class _ListEntryPasswordWidgetState extends State<ListEntryPasswordWidget> {
       _passwordVisible = !_passwordVisible;
     });
   }
-
-  Future<String> retrieveActualPassword() async {
-    final authKey = Provider.of<Auth>(context, listen: false).authKey!.trim();
-    final cryptor = StringEncryption();
-
-    final fakePassword = await cryptor.decrypt(widget.password, authKey);
-
-    final storage = FlutterSecureStorage();
-    String? actualPasswordEnc = await storage.read(key: fakePassword!);
-
-    if (actualPasswordEnc == null) {
-      return '';
-    }
-
-    final actualPassword = await cryptor.decrypt(actualPasswordEnc, authKey);
-    return actualPassword!;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -50,7 +33,7 @@ class _ListEntryPasswordWidgetState extends State<ListEntryPasswordWidget> {
               onPressed: _switchVisibility,
             )
           : FutureBuilder(
-              future: retrieveActualPassword(),
+              future: widget.getPassword(widget.authKey),
               builder: (ctx, snapshot) =>
                   snapshot.connectionState == ConnectionState.waiting
                       ? CircularProgressIndicator()

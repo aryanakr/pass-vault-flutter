@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pass_vault/models/password_entry.dart';
 import 'package:pass_vault/providers/auth.dart';
 import 'package:pass_vault/providers/password_entries.dart';
+import 'package:pass_vault/screens/entry_detail_screen.dart';
 import 'package:pass_vault/widgets/list_entry_password.dart';
 import 'package:provider/provider.dart';
 import 'package:pass_vault/screens/create_password_entry_screen.dart';
@@ -10,6 +12,7 @@ class PasswordsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<Auth>(context, listen: false).authKey;
     return Scaffold(
       appBar: AppBar(
         title: Text('PassVault'),
@@ -49,9 +52,9 @@ class PasswordsScreen extends StatelessWidget {
                               subtitle: passwords.items[i].website != null
                                   ? Text(passwords.items[i].website!)
                                   : passwords.items[i].email != null ? Text(passwords.items[i].email!) : null,
-                              trailing: ListEntryPasswordWidget(passwords.items[i].password),
+                              trailing: ListEntryPasswordWidget(passwords.items[i].retrieveActualPassword, auth!),
                               onTap: () {
-                                // move to entry detail
+                                Navigator.of(context).pushNamed(EntryDetailScreen.routeName, arguments: passwords.items[i].id);
                               },
                             ),
                           ),

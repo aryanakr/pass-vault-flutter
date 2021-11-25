@@ -23,10 +23,11 @@ class PasswordEntry {
 
   Future<String> retrieveActualPassword(String authKey) async {
     final cryptor = StringEncryption();
-    final decriptKey = await cryptor.decrypt(password, authKey);
+
+    final fakePassword = await cryptor.decrypt(password, authKey);
 
     final storage = FlutterSecureStorage();
-    String? actualPasswordEnc = await storage.read(key: decriptKey!);
+    String? actualPasswordEnc = await storage.read(key: fakePassword!);
 
     if (actualPasswordEnc == null) {
       return '';
