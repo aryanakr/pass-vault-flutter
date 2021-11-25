@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pass_vault/providers/auth.dart';
 import 'package:pass_vault/providers/password_entries.dart';
 import 'package:pass_vault/widgets/list_entry_password.dart';
 import 'package:provider/provider.dart';
@@ -47,8 +48,8 @@ class PasswordsScreen extends StatelessWidget {
                               title: Text(passwords.items[i].title),
                               subtitle: passwords.items[i].website != null
                                   ? Text(passwords.items[i].website!)
-                                  : null,
-                              trailing: ListEntryPasswordWidget(),
+                                  : passwords.items[i].email != null ? Text(passwords.items[i].email!) : null,
+                              trailing: ListEntryPasswordWidget(passwords.items[i].password),
                               onTap: () {
                                 // move to entry detail
                               },

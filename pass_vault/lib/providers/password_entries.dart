@@ -6,6 +6,8 @@ import 'package:pass_vault/models/password_entry.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:string_encryption/string_encryption.dart';
 
+import 'package:random_password_generator/random_password_generator.dart';
+
 
 class PasswordEntries with ChangeNotifier {
   List<PasswordEntry> _items = [];
@@ -27,14 +29,22 @@ class PasswordEntries with ChangeNotifier {
     String? description,
   ) async {
     // process and save actual password
-    final cryptor = StringEncryption();
+    
 
-    final fakePassword = await cryptor.generateRandomKey();
-    final secureKey = await cryptor.encrypt(fakePassword!, authKey);
+    final passwordGen = RandomPasswordGenerator();
+    final fakePassword = passwordGen.randomPassword(
+        letters: true,
+        numbers: true,
+        uppercase: false,
+        specialChar: false,
+        passwordLength: 8);
+    
+    final cryptor = StringEncryption();
+    final encryptedFake = await cryptor.encrypt(fakePassword, authKey);
     final encryptedPassword = await cryptor.encrypt(actualPassword, authKey);
 
-    final storage = new FlutterSecureStorage();
-    await storage.write(key: secureKey!, value: encryptedPassword);
+    final storage = FlutterSecureStorage();
+    await storage.write(key: fakePassword, value: encryptedPassword);
     
     // create entry
     final newEntry = PasswordEntry(
@@ -44,7 +54,7 @@ class PasswordEntries with ChangeNotifier {
       username: username,
       email: email,
       description: description,
-      password: fakePassword,
+      password: encryptedFake!.trim(),
     );
     _items.add(newEntry);
     notifyListeners();
