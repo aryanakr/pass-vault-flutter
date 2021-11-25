@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:pass_vault/models/password_entry.dart';
 import 'package:pass_vault/providers/auth.dart';
 import 'package:pass_vault/providers/password_entries.dart';
 import 'package:pass_vault/screens/entry_detail_screen.dart';
 import 'package:pass_vault/widgets/list_entry_password.dart';
 import 'package:provider/provider.dart';
-import 'package:pass_vault/screens/create_password_entry_screen.dart';
+import 'package:pass_vault/screens/create_entry_screen.dart';
 
 class PasswordsScreen extends StatelessWidget {
   static const routeName = '/passwords-list';
@@ -20,7 +19,7 @@ class PasswordsScreen extends StatelessWidget {
           IconButton(
               onPressed: () {
                 Navigator.of(context)
-                    .pushNamed(CreatePasswordEntryScreen.routeName);
+                    .pushNamed(CreateEntryScreen.routeName);
               },
               icon: Icon(Icons.add))
         ],
@@ -28,7 +27,7 @@ class PasswordsScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          Navigator.of(context).pushNamed(CreatePasswordEntryScreen.routeName);
+          Navigator.of(context).pushNamed(CreateEntryScreen.routeName);
         },
       ),
       body: FutureBuilder(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pass_vault/models/password_entry.dart';
 import 'package:pass_vault/providers/auth.dart';
 import 'package:pass_vault/providers/password_entries.dart';
+import 'package:pass_vault/screens/edit_entry_screen.dart';
 import 'package:pass_vault/screens/passwords_screen.dart';
 import 'package:pass_vault/widgets/entry_detail_component.dart';
 import 'package:pass_vault/widgets/list_entry_password.dart';
@@ -35,7 +36,7 @@ class EntryDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(passwordEntry.title),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
+          IconButton(onPressed: () => Navigator.of(context).pushReplacementNamed(EditEntryScreen.routeName,arguments: id), icon: Icon(Icons.edit)),
           IconButton(onPressed: () => deleteEntryDialog(passwordEntry, context), icon: Icon(Icons.delete))
         ],
       ),

@@ -4,10 +4,14 @@ import 'package:pass_vault/widgets/password_generator.dart';
 class EntryFormWidget extends StatefulWidget {
   final Map<String, String> formData;
   final TextEditingController passwordController;
-  final Future<void> Function(Map<String, String> data) submit;
+  final Future<void> Function() submit;
 
-  EntryFormWidget({required this.formData,required  this.passwordController,required this.submit,});
-  
+  EntryFormWidget({
+    required this.formData,
+    required this.passwordController,
+    required this.submit,
+  });
+
   @override
   _EntryFormWidgetState createState() => _EntryFormWidgetState();
 }
@@ -16,14 +20,13 @@ class _EntryFormWidgetState extends State<EntryFormWidget> {
   final GlobalKey<FormState> _formKey = GlobalKey();
 
   Future<void> _confirmSubmition() async {
-
     if (!_formKey.currentState!.validate()) {
       return;
     }
     _formKey.currentState!.save();
     widget.formData['password'] = widget.passwordController.text;
 
-    widget.submit(widget.formData);
+    widget.submit();
   }
 
   @override
@@ -75,9 +78,7 @@ class _EntryFormWidgetState extends State<EntryFormWidget> {
                 widget.formData['username'] = value!;
               },
             ),
-            
             PasswordGeneratorWidget(widget.passwordController),
-
             TextFormField(
               initialValue: widget.formData['description'],
               decoration: const InputDecoration(
@@ -88,7 +89,8 @@ class _EntryFormWidgetState extends State<EntryFormWidget> {
                 widget.formData['description'] = value!;
               },
             ),
-            ElevatedButton(onPressed: _confirmSubmition, child: const Text('Submit'))
+            ElevatedButton(
+                onPressed: _confirmSubmition, child: const Text('Submit'))
           ],
         ),
       ),

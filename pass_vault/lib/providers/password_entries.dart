@@ -8,7 +8,6 @@ import 'package:string_encryption/string_encryption.dart';
 
 import 'package:random_password_generator/random_password_generator.dart';
 
-
 class PasswordEntries with ChangeNotifier {
   List<PasswordEntry> _items = [];
 
@@ -20,16 +19,16 @@ class PasswordEntries with ChangeNotifier {
 
   PasswordEntries(this.authKey, this._items);
 
-  Future<void> addPasswordEntry(
-    String title,
-    String actualPassword,
+  Future<void> addPasswordEntry({
+    String? id,
+    required String title,
+    required String actualPassword,
     String? website,
     String? username,
     String? email,
     String? description,
-  ) async {
+  }) async {
     // process and save actual password
-    
 
     final passwordGen = RandomPasswordGenerator();
     final fakePassword = passwordGen.randomPassword(
@@ -38,17 +37,17 @@ class PasswordEntries with ChangeNotifier {
         uppercase: false,
         specialChar: false,
         passwordLength: 8);
-    
+
     final cryptor = StringEncryption();
     final encryptedFake = await cryptor.encrypt(fakePassword, authKey);
     final encryptedPassword = await cryptor.encrypt(actualPassword, authKey);
 
     final storage = FlutterSecureStorage();
     await storage.write(key: fakePassword, value: encryptedPassword);
-    
+
     // create entry
     final newEntry = PasswordEntry(
-      id: DateTime.now().toString(),
+      id: id ?? DateTime.now().toString(),
       title: title,
       website: website,
       username: username,
@@ -82,15 +81,17 @@ class PasswordEntries with ChangeNotifier {
 
   Future<void> fetchAndSetEntries() async {
     final dataList = await DBHelper.getData('user_password_entries');
-    _items = dataList.map((e) => PasswordEntry(
-      id: e['id'],
-      title: e['title'],
-      website: e['website'],
-      username: e['username'],
-      email: e['email'],
-      description: e['description'],
-      password: e['password'],
-    )).toList();
+    _items = dataList
+        .map((e) => PasswordEntry(
+              id: e['id'],
+              title: e['title'],
+              website: e['website'],
+              username: e['username'],
+              email: e['email'],
+              description: e['description'],
+              password: e['password'],
+            ))
+        .toList();
 
     notifyListeners();
   }
@@ -114,5 +115,27 @@ class PasswordEntries with ChangeNotifier {
 
     // remove entry from database
     await DBHelper.delete('user_password_entries', entry.id);
+  }
+
+  Future<void> updatePasswordEntry(
+    String id,
+    String title,
+    String actualPassword,
+    String? website,
+    String? username,
+    String? email,
+    String? description,
+  ) async {
+    PasswordEntry oldEntry = findEntryById(id);
+    await deletePasswordEntry(oldEntry);
+    await addPasswordEntry(
+      id: id,
+      title: title,
+      actualPassword: actualPassword,
+      website: website,
+      username: username,
+      email: email,
+      description: description,
+    );
   }
 }
