@@ -25,6 +25,6 @@ class DBHelper {
   
   static Future<void> delete(String table, String id) async {
     final db = await DBHelper.database();
-    await db.delete(table, where: id);
+    await db.delete(table, where: 'id = ?', whereArgs: [id]);
   }
 }

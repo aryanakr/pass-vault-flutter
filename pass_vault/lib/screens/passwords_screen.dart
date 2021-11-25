@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:pass_vault/screens/create_password_entry_screen.dart';
 
 class PasswordsScreen extends StatelessWidget {
-  const PasswordsScreen({Key? key}) : super(key: key);
+  static const routeName = '/passwords-list';
 
   @override
   Widget build(BuildContext context) {

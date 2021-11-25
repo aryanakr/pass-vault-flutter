@@ -2,12 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:pass_vault/models/password_entry.dart';
 import 'package:pass_vault/providers/auth.dart';
 import 'package:pass_vault/providers/password_entries.dart';
+import 'package:pass_vault/screens/passwords_screen.dart';
 import 'package:pass_vault/widgets/entry_detail_component.dart';
 import 'package:pass_vault/widgets/list_entry_password.dart';
 import 'package:provider/provider.dart';
 
 class EntryDetailScreen extends StatelessWidget {
   static const routeName = '/detail-screen';
+
+  void deleteEntryDialog(PasswordEntry entry, BuildContext context) {
+    showDialog(context: context, builder: (BuildContext bctx) => AlertDialog(
+      title: Text('Delete Entry'),
+      content: Text('Are you sure you want to permanantly remove this password entry?'),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(context), child: Text('Cancel')),
+        TextButton(onPressed: () async {
+          await Provider.of<PasswordEntries>(context, listen: false).deletePasswordEntry(entry);
+          Navigator.of(context).pushReplacementNamed(PasswordsScreen.routeName);
+        }, child: Text('Confirm'))
+      ],
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +36,7 @@ class EntryDetailScreen extends StatelessWidget {
         title: Text(passwordEntry.title),
         actions: [
           IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
-          IconButton(onPressed: () {}, icon: Icon(Icons.delete))
+          IconButton(onPressed: () => deleteEntryDialog(passwordEntry, context), icon: Icon(Icons.delete))
         ],
       ),
       body: SingleChildScrollView(

@@ -98,4 +98,21 @@ class PasswordEntries with ChangeNotifier {
   PasswordEntry findEntryById(String id) {
     return _items.firstWhere((element) => element.id == id);
   }
+
+  Future<void> deletePasswordEntry(PasswordEntry entry) async {
+    // Delete actual password
+    final cryptor = StringEncryption();
+
+    final passwordSorageKey = await cryptor.decrypt(entry.password, authKey);
+
+    final storage = FlutterSecureStorage();
+    await storage.delete(key: passwordSorageKey!);
+
+    // remove from list
+    _items.remove(entry);
+    notifyListeners();
+
+    // remove entry from database
+    await DBHelper.delete('user_password_entries', entry.id);
+  }
 }

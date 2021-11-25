@@ -45,6 +45,7 @@ class MyApp extends StatelessWidget {
             AuthInitScreen.routeName: (ctx) => AuthInitScreen(),
             CreatePasswordEntryScreen.routeName: (ctx) => CreatePasswordEntryScreen(),
             EntryDetailScreen.routeName: (ctx) => EntryDetailScreen(),
+            PasswordsScreen.routeName: (ctx) => PasswordsScreen()
           },
         ),
       ),
