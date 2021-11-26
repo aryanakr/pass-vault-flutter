@@ -5,6 +5,7 @@ import 'package:pass_vault/screens/create_entry_screen.dart';
 import 'package:pass_vault/screens/edit_entry_screen.dart';
 import 'package:pass_vault/screens/entry_detail_screen.dart';
 import 'package:pass_vault/screens/passwords_screen.dart';
+import 'package:pass_vault/theme/theme.dart';
 import 'package:provider/provider.dart';
 
 import 'package:pass_vault/screens/auth_init_screen.dart';
@@ -38,9 +39,10 @@ class MyApp extends StatelessWidget {
       child: Consumer<Auth>(
         builder: (ctx, auth, _) => MaterialApp(
           title: 'PassVault',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
+          theme: AppTheme.bulildLightThme(),
+          darkTheme: AppTheme.buildDarkTheme(),
+          themeMode: ThemeMode.system, 
+          debugShowCheckedModeBanner: false,
           home: auth.isAuth ? PasswordsScreen() : _appEntryScreen(),
           routes: {
             AuthInitScreen.routeName: (ctx) => AuthInitScreen(),
