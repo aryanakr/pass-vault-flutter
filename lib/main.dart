@@ -11,7 +11,7 @@ import 'package:pass_vault/screens/auth_init_screen.dart';
 import 'package:pass_vault/screens/login_screen.dart';
 import 'package:pass_vault/screens/welcome_screen.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -53,20 +53,21 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
-}
 
-Widget _appEntryScreen() {
-  return FutureBuilder<SharedPreferences>(
-    future: SharedPreferences.getInstance(),
-    builder: (ctx, snapshot) =>
-        snapshot.connectionState == ConnectionState.waiting
-            ? const Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              )
-            : snapshot.data!.getString("passvaultinit") == null
-                ? WelcomeScreen()
-                : LoginScreen(),
-  );
+  Widget _appEntryScreen() {
+    final storage = FlutterSecureStorage();
+    return FutureBuilder<String?>(
+      future: storage.read(key: "passvaultinit"),
+      builder: (ctx, snapshot) =>
+          snapshot.connectionState == ConnectionState.waiting
+              ? const Scaffold(
+                  body: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              : snapshot.data == null || snapshot.data!.isEmpty
+                  ? WelcomeScreen()
+                  : LoginScreen(),
+    );
+  }
 }

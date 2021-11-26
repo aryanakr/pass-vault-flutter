@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_locker/flutter_locker.dart';
 import 'package:string_encryption/string_encryption.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthInitScreen extends StatefulWidget {
@@ -62,7 +62,7 @@ class _AuthInitScreenState extends State<AuthInitScreen> {
     }
 
     final cryptor = StringEncryption();
-
+    
     // generate entry salt
     final entrySalt = await cryptor.generateSalt();
 
@@ -71,14 +71,15 @@ class _AuthInitScreenState extends State<AuthInitScreen> {
         _passwordController.text, entrySalt!);
 
     // shared pref <- passvaultinit : entrySalt
-    SharedPreferences.getInstance()
-        .then((prefs) => prefs.setString("passvaultinit", entrySalt));
+    final storage = FlutterSecureStorage();
+
+    await storage.write(key: "passvaultinit", value: entrySalt);
 
     // generate sql password
     final sqlKey = await cryptor.generateRandomKey();
 
     // Encrypted shared pref <- entryTokenKey : sql password
-    final storage = new FlutterSecureStorage();
+    
 
     await storage.write(key: entryTokenKey!, value: sqlKey);
 

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_locker/flutter_locker.dart';
 import 'package:string_encryption/string_encryption.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Auth with ChangeNotifier {
@@ -16,14 +16,15 @@ class Auth with ChangeNotifier {
   }
 
   Future<bool> fetchAndSetTokensByPassword(String password) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final entrySalt = prefs.getString("passvaultinit");
+    
+    final storage = FlutterSecureStorage();
+    final entrySalt = await storage.read(key: "passvaultinit");
 
     final cryptor = StringEncryption();
 
     final entryTokenKey = (await cryptor.generateKeyFromPassword(password, entrySalt!))!;
     
-    final storage = new FlutterSecureStorage();
+    
     final passTokenRet = await storage.read(key: entryTokenKey);
 
     if(passTokenRet == null || passTokenRet.isEmpty){
@@ -52,9 +53,8 @@ class Auth with ChangeNotifier {
       return false;
     }
 
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final entrySalt = prefs.getString("passvaultinit");
+    final storage = FlutterSecureStorage();
+    final entrySalt = await storage.read(key: "passvaultinit");
 
     String authValue = '';
 
