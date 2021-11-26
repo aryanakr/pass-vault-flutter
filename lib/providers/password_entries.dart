@@ -59,29 +59,34 @@ class PasswordEntries with ChangeNotifier {
     notifyListeners();
 
     // push to database
+    final encTitle = await cryptor.encrypt(newEntry.title, authKey);
     var dataMap = {
       'id': newEntry.id,
-      'title': newEntry.title,
+      'title': encTitle!,
       'password': newEntry.password,
     };
     if (newEntry.website != null) {
-      dataMap.addAll({'website': newEntry.website!});
+      final encData = await cryptor.encrypt(newEntry.website!, authKey);
+      dataMap.addAll({'website': encData!});
     }
     if (newEntry.username != null) {
-      dataMap.addAll({'username': newEntry.username!});
+      final encData = await cryptor.encrypt(newEntry.username!, authKey);
+      dataMap.addAll({'username': encData!});
     }
     if (newEntry.email != null) {
-      dataMap.addAll({'email': newEntry.email!});
+      final encData = await cryptor.encrypt(newEntry.email!, authKey);
+      dataMap.addAll({'email': encData!});
     }
     if (newEntry.description != null) {
-      dataMap.addAll({'description': newEntry.description!});
+      final encData = await cryptor.encrypt(newEntry.description!, authKey);
+      dataMap.addAll({'description': encData!});
     }
     DBHelper.insert('user_password_entries', dataMap);
   }
 
   Future<void> fetchAndSetEntries() async {
     final dataList = await DBHelper.getData('user_password_entries');
-    _items = dataList
+    _items = await Future.wait(dataList
         .map((e) => PasswordEntry(
               id: e['id'],
               title: e['title'],
@@ -90,8 +95,9 @@ class PasswordEntries with ChangeNotifier {
               email: e['email'],
               description: e['description'],
               password: e['password'],
-            ))
-        .toList();
+            ).getEncrypted(authKey)
+        ).toList());
+        
 
     notifyListeners();
   }

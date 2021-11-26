@@ -20,7 +20,6 @@ class PasswordEntry {
     required this.password,
   });
 
-
   Future<String> retrieveActualPassword(String authKey) async {
     final cryptor = StringEncryption();
 
@@ -35,5 +34,24 @@ class PasswordEntry {
 
     final actualPassword = await cryptor.decrypt(actualPasswordEnc, authKey);
     return actualPassword!;
+  }
+
+  Future<PasswordEntry> getEncrypted(String authKey) async {
+    final cryptor = StringEncryption();
+
+    return PasswordEntry(
+      id: id,
+      title: (await cryptor.decrypt(title, authKey))!,
+      website:
+          website != null ? (await cryptor.decrypt(website!, authKey))! : null,
+      username: username != null
+          ? (await cryptor.decrypt(username!, authKey))!
+          : null,
+      email: email != null ? (await cryptor.decrypt(email!, authKey))! : null,
+      description: description != null
+          ? (await cryptor.decrypt(description!, authKey))!
+          : null,
+      password: password,
+    );
   }
 }
