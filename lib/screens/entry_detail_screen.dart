@@ -44,33 +44,31 @@ class EntryDetailScreen extends StatelessWidget {
         child: Column(
           children: [
             EntryDetailComponent(
-                'Title', Icon(Icons.title), passwordEntry.title),
+                'Title', Icon(Icons.title), Text(passwordEntry.title, style: Theme.of(context).textTheme.headline6!,)),
 
             if (passwordEntry.website != null &&
                 !passwordEntry.website!.isEmpty)
               EntryDetailComponent(
-                  'Website', Icon(Icons.link), passwordEntry.website!),
+                  'Website', Icon(Icons.link), Text(passwordEntry.website!, style: Theme.of(context).textTheme.headline6!,)),
 
-            if (passwordEntry.email != null && !passwordEntry.email!.isEmpty)
+            if (passwordEntry.email != null && passwordEntry.email!.isNotEmpty)
               EntryDetailComponent(
-                  'Email', Icon(Icons.email), passwordEntry.email!),
+                  'Email', Icon(Icons.email), Text(passwordEntry.email!, style: Theme.of(context).textTheme.headline6!,)),
 
             if (passwordEntry.username != null &&
-                !passwordEntry.username!.isEmpty)
+                passwordEntry.username!.isNotEmpty)
               EntryDetailComponent(
-                  'Username', Icon(Icons.face), passwordEntry.username!),
+                  'Username', const Icon(Icons.face), Text(passwordEntry.username!, style: Theme.of(context).textTheme.headline6!,)),
 
-            Row(children: [
-              Icon(Icons.password),
-              Text('Password'),
-            ],),
-            ListEntryPasswordWidget(
-                passwordEntry.retrieveActualPassword, auth!),
+
+            EntryDetailComponent(
+                  'Password', Icon(Icons.password), ListEntryPasswordWidget(
+                passwordEntry.retrieveActualPassword, auth!),),
 
             if (passwordEntry.description != null &&
-                !passwordEntry.description!.isEmpty)
-              EntryDetailComponent('Description', Icon(Icons.description),
-                  passwordEntry.description!),
+                passwordEntry.description!.isNotEmpty)
+              EntryDetailComponent('Description', const Icon(Icons.description),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.75,child: Text(passwordEntry.description!, style: Theme.of(context).textTheme.headline6!,))),
           ],
         ),
       ),

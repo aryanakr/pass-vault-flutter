@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_locker/flutter_locker.dart';
+import 'package:pass_vault/screens/login_screen.dart';
 import 'package:string_encryption/string_encryption.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -83,8 +84,8 @@ class _AuthInitScreenState extends State<AuthInitScreen> {
 
     await storage.write(key: entryTokenKey!, value: sqlKey);
 
-    // navigate to /
-    Navigator.of(context).pushReplacementNamed('/');
+    // navigate to login page
+    Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
   }
 
   @override

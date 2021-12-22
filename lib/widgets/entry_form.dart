@@ -78,9 +78,13 @@ class _EntryFormWidgetState extends State<EntryFormWidget> {
                 widget.formData['username'] = value!;
               },
             ),
+            const SizedBox(height: 8.0,),
             PasswordGeneratorWidget(widget.passwordController),
+            const SizedBox(height: 8.0,),
             TextFormField(
               initialValue: widget.formData['description'],
+              minLines: 1,
+              maxLines: 5,
               decoration: const InputDecoration(
                   labelText: 'description',
                   suffixIcon: Icon(Icons.description)),
@@ -89,6 +93,7 @@ class _EntryFormWidgetState extends State<EntryFormWidget> {
                 widget.formData['description'] = value!;
               },
             ),
+            const SizedBox(height: 8.0,),
             ElevatedButton(
                 onPressed: _confirmSubmition, child: const Text('Submit'))
           ],

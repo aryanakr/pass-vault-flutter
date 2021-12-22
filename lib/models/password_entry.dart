@@ -36,9 +36,10 @@ class PasswordEntry {
     return actualPassword!;
   }
 
-  Future<PasswordEntry> getEncrypted(String authKey) async {
+  Future<PasswordEntry> getDecripted(String authKey) async {
     final cryptor = StringEncryption();
 
+    print("authkey:  $authKey");
     return PasswordEntry(
       id: id,
       title: (await cryptor.decrypt(title, authKey))!,

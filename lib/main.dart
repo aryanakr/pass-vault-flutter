@@ -50,6 +50,7 @@ class MyApp extends StatelessWidget {
             EntryDetailScreen.routeName: (ctx) => EntryDetailScreen(),
             PasswordsScreen.routeName: (ctx) => PasswordsScreen(),
             EditEntryScreen.routeName: (ctx) => EditEntryScreen(),
+            LoginScreen.routeName: (ctx) => LoginScreen(),
           },
         ),
       ),
@@ -57,7 +58,7 @@ class MyApp extends StatelessWidget {
   }
 
   Widget _appEntryScreen() {
-    final storage = FlutterSecureStorage();
+    const storage = FlutterSecureStorage();
     return FutureBuilder<String?>(
       future: storage.read(key: "passvaultinit"),
       builder: (ctx, snapshot) =>

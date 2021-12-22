@@ -95,7 +95,7 @@ class PasswordEntries with ChangeNotifier {
               email: e['email'],
               description: e['description'],
               password: e['password'],
-            ).getEncrypted(authKey)
+            ).getDecripted(authKey)
         ).toList());
         
 

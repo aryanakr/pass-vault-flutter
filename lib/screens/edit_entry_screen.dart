@@ -60,11 +60,14 @@ class EditEntryScreen extends StatelessWidget {
         builder: (ctx, snapshot) =>
             snapshot.connectionState == ConnectionState.waiting
                 ? Center(child: CircularProgressIndicator())
-                : EntryFormWidget(
-                    formData: formData,
-                    passwordController: passwordController,
-                    submit: submit,
-                  ),
+                : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  child: EntryFormWidget(
+                      formData: formData,
+                      passwordController: passwordController,
+                      submit: submit,
+                    ),
+                ),
       ),
     );
   }

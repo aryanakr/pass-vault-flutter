@@ -36,10 +36,13 @@ class CreateEntryScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Create Entry'),
       ),
-      body: EntryFormWidget(
-        formData: formData,
-        passwordController: passwordController,
-        submit: submit,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        child: EntryFormWidget(
+          formData: formData,
+          passwordController: passwordController,
+          submit: submit,
+        ),
       ),
     );
   }

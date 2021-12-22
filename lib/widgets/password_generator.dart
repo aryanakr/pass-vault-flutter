@@ -35,13 +35,12 @@ class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
   }
 
   labeledSwitch(String label, bool val, Function(bool) update) {
-    return Row(children: [
-      Text(label),
-      Switch(
-            value: val,
-            onChanged: update
-          ),
-    ],);
+    return Row(
+      children: [
+        Text(label),
+        Switch(value: val, onChanged: update),
+      ],
+    );
   }
 
   // TODO: Create Strength inidicator widget
@@ -49,7 +48,7 @@ class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
   //   final password = RandomPasswordGenerator();
   //   double passwordstrength = password.checkPassword(password: widget.textFieldController.text);
 
-  //   if (passwordstrength < 0.3) 
+  //   if (passwordstrength < 0.3)
   //       print('This password is weak!');
   //   else if (passwordstrength < 0.7)
   //       print('This password is Good');
@@ -59,55 +58,76 @@ class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          TextField(
-            controller: widget.textFieldController,
-            decoration: const InputDecoration(
-              labelText: 'Password',
-              suffixIcon: Icon(Icons.password),
-            ),
-            keyboardType: TextInputType.visiblePassword,
+    return Column(
+      children: [
+        TextField(
+          controller: widget.textFieldController,
+          decoration: const InputDecoration(
+            labelText: 'Password',
+            suffixIcon: Icon(Icons.password),
           ),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceAround,children: [
-            labeledSwitch('Letters', _isWithLetters, (value) =>
-              setState(() {
-                _isWithLetters = value;
-              })
-            ),
-            labeledSwitch('Numbers', _isWithNumbers, (value) =>
-              setState(() {
-                _isWithNumbers = value;
-              })
-            ),
-          ],),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceAround,children: [
-            labeledSwitch('Upper Case', _isWithUppercase, (value) =>
-              setState(() {
-                _isWithUppercase = value;
-              })
-            ),
-            labeledSwitch('Symbols', _isWithSpecial, (value) =>
-              setState(() {
-                _isWithSpecial = value;
-              })
-            ),
-          ],),
-
-          SpinBox(
-            decoration: InputDecoration(labelText: 'Length'),
-            min: 1,
-            max: 30,
-            value: 8,
-            onChanged: (value) => setState(() {
-              _numberCharPassword = value;
-            }),
+          keyboardType: TextInputType.visiblePassword,
+        ),
+        Card(
+            child: Padding(
+          padding: EdgeInsets.all(0.0),
+          child: ExpansionTile(
+            title: const Text('Password Generator'),
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  labeledSwitch(
+                      'Letters',
+                      _isWithLetters,
+                      (value) => setState(() {
+                            _isWithLetters = value;
+                          })),
+                  labeledSwitch(
+                      'Numbers',
+                      _isWithNumbers,
+                      (value) => setState(() {
+                            _isWithNumbers = value;
+                          })),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  labeledSwitch(
+                      'Upper Case',
+                      _isWithUppercase,
+                      (value) => setState(() {
+                            _isWithUppercase = value;
+                          })),
+                  labeledSwitch(
+                    'Symbols',
+                    _isWithSpecial,
+                    (value) => setState(() {
+                      _isWithSpecial = value;
+                    }),
+                  ),
+                ],
+              ),
+              SizedBox(
+                width: 250.0,
+                child: SpinBox(
+                  decoration: const InputDecoration(labelText: 'Length',),
+                  min: 1,
+                  max: 30,
+                  value: 8,
+                  onChanged: (value) => setState(() {
+                    _numberCharPassword = value;
+                  }),
+                ),
+              ),
+              const SizedBox(height: 8.0,),
+              ElevatedButton(
+                  onPressed: _generatePassword, child: Text('Generate')),
+            ],
           ),
-          
-          ElevatedButton(onPressed: _generatePassword, child: Text('Generate')),
-        ],
-      ),
+        ))
+      ],
     );
   }
 }
