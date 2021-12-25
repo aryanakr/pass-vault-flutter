@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pass_vault/providers/auth.dart';
+
+import 'package:provider/provider.dart';
 
 import 'package:flutter_locker/flutter_locker.dart';
 import 'package:pass_vault/screens/login_screen.dart';
@@ -48,44 +51,11 @@ class _AuthInitScreenState extends State<AuthInitScreen> {
       return;
     }
 
-    // Locker <- bioauth : password
-    if (_bioAuthCheckedValue) {
-      FlutterLocker.save(SaveSecretRequest('bioauth', _passwordController.text,
-              AndroidPrompt('Authenticate', 'Cancel')))
-          .then((value) {})
-          .catchError((err) {
-        Scaffold.of(context).showSnackBar(SnackBar(
-            content: Text(
-                'Error happened (try disabling biometric authentication): ' +
-                    err.toString())));
-        return;
-      });
-    }
-
-    final cryptor = StringEncryption();
-    
-    // generate entry salt
-    final entrySalt = await cryptor.generateSalt();
-
-    // entryTokenKey =  encrypt entry salt with password
-    final entryTokenKey = await cryptor.generateKeyFromPassword(
-        _passwordController.text, entrySalt!);
-
-    // shared pref <- passvaultinit : entrySalt
-    final storage = FlutterSecureStorage();
-
-    await storage.write(key: "passvaultinit", value: entrySalt);
-
-    // generate sql password
-    final sqlKey = await cryptor.generateRandomKey();
-
-    // Encrypted shared pref <- entryTokenKey : sql password
-    
-
-    await storage.write(key: entryTokenKey!, value: sqlKey);
+    await Provider.of<Auth>(context, listen: false)
+        .initialiseAuth(_passwordController.text, _bioAuthCheckedValue);
 
     // navigate to login page
-    Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+    Navigator.of(context).pushReplacementNamed('/');
   }
 
   @override
@@ -95,35 +65,41 @@ class _AuthInitScreenState extends State<AuthInitScreen> {
         title: Text('Get Started'),
       ),
       body: Builder(builder: (context) {
-        return Column(
-          children: [
-            TextField(
-              decoration: InputDecoration(labelText: 'Password'),
-              controller: _passwordController,
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Password Confirmation'),
-              controller: _passwordConfirmController,
-            ),
-            CheckboxListTile(
-              title: Text("Enable Biometric Authentication"),
-              value: _bioAuthCheckedValue,
-              onChanged: (newValue) {
-                if (newValue!) {
-                  _checkBioAuthAvailable(context);
-                } else {
-                  setState(() {
-                    _bioAuthCheckedValue = false;
-                  });
-                }
-              },
-              controlAffinity:
-                  ListTileControlAffinity.leading, //  <-- leading Checkbox
-            ),
-            ElevatedButton(
+        return Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            children: [
+              TextField(
+                decoration: InputDecoration(labelText: 'Password'),
+                controller: _passwordController,
+              ),
+              SizedBox(height: 8.0,),
+              TextField(
+                decoration: InputDecoration(labelText: 'Password Confirmation'),
+                controller: _passwordConfirmController,
+              ),
+              SizedBox(height: 32.0,),
+              CheckboxListTile(
+                title: Text("Enable Biometric Authentication"),
+                value: _bioAuthCheckedValue,
+                onChanged: (newValue) {
+                  if (newValue!) {
+                    _checkBioAuthAvailable(context);
+                  } else {
+                    setState(() {
+                      _bioAuthCheckedValue = false;
+                    });
+                  }
+                },
+                controlAffinity:
+                    ListTileControlAffinity.leading, //  <-- leading Checkbox
+              ),
+              ElevatedButton(
                 onPressed: () => _submitInitialisation(context),
-                child: Text('Submit'))
-          ],
+                child: Text('Submit'),
+              )
+            ],
+          ),
         );
       }),
     );

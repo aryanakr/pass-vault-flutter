@@ -15,6 +15,41 @@ class Auth with ChangeNotifier {
     return _authKey != null;
   }
 
+  Future<void> initialiseAuth(String userPassword, bool bioAuthAvailable) async {
+    
+    // Locker <- bioauth : password
+    if (bioAuthAvailable) {
+      FlutterLocker.save(SaveSecretRequest('bioauth', userPassword,
+              AndroidPrompt('Authenticate', 'Cancel')))
+          .then((value) {})
+          .catchError((err) {
+        bioAuthAvailable = false;
+      });
+    }
+
+    final cryptor = StringEncryption();
+    
+    // generate entry salt
+    final entrySalt = await cryptor.generateSalt();
+
+    // entryTokenKey =  encrypt entry salt with password
+    final entryTokenKey = await cryptor.generateKeyFromPassword(
+        userPassword, entrySalt!);
+
+    // shared pref <- passvaultinit : entrySalt
+    const storage = FlutterSecureStorage();
+
+    await storage.write(key: "passvaultinit", value: entrySalt);
+
+    // generate sql password
+    final sqlKey = await cryptor.generateRandomKey();
+
+    // Encrypted shared pref <- entryTokenKey : sql password
+    await storage.write(key: entryTokenKey!, value: sqlKey);
+
+    notifyListeners();
+  }
+
   Future<bool> fetchAndSetTokensByPassword(String password) async {
     
     final storage = FlutterSecureStorage();

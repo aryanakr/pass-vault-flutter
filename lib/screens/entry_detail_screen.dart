@@ -36,7 +36,7 @@ class EntryDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(passwordEntry.title),
         actions: [
-          IconButton(onPressed: () => Navigator.of(context).pushReplacementNamed(EditEntryScreen.routeName,arguments: id), icon: Icon(Icons.edit)),
+          IconButton(onPressed: () => Navigator.of(context).pushNamed(EditEntryScreen.routeName,arguments: id), icon: Icon(Icons.edit)),
           IconButton(onPressed: () => deleteEntryDialog(passwordEntry, context), icon: Icon(Icons.delete))
         ],
       ),
