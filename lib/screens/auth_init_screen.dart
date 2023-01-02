@@ -24,15 +24,15 @@ class _AuthInitScreenState extends State<AuthInitScreen> {
   void _checkBioAuthAvailable(BuildContext ctx) {
     FlutterLocker.canAuthenticate().then((value) {
       if (!value!) {
-        Scaffold.of(ctx).showSnackBar(
-            SnackBar(content: Text('Biometric authenticate unavailable')));
+        ScaffoldMessenger.of(ctx).showSnackBar(
+            const SnackBar(content: Text('Biometric authenticate unavailable')));
       } else {
         setState(() {
           _bioAuthCheckedValue = true;
         });
       }
     }).catchError((err) {
-      Scaffold.of(ctx).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
           content:
               Text('Error with biometric authentication: ' + err.toString())));
     });
@@ -41,12 +41,12 @@ class _AuthInitScreenState extends State<AuthInitScreen> {
   Future<void> _submitInitialisation(BuildContext context) async {
     // validation
     if (_passwordController.text.length < 8) {
-      Scaffold.of(context)
+      ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Password is too short!')));
       return;
     }
     if (_passwordConfirmController.text != _passwordConfirmController.text) {
-      Scaffold.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Password and confirmation fields do not match!')));
       return;
     }

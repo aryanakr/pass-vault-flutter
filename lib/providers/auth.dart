@@ -19,8 +19,8 @@ class Auth with ChangeNotifier {
     
     // Locker <- bioauth : password
     if (bioAuthAvailable) {
-      FlutterLocker.save(SaveSecretRequest('bioauth', userPassword,
-              AndroidPrompt('Authenticate', 'Cancel')))
+      FlutterLocker.save(SaveSecretRequest(key: 'bioauth',secret: userPassword,
+              androidPrompt: AndroidPrompt(title: 'Authenticate', cancelLabel: 'Cancel')))
           .then((value) {})
           .catchError((err) {
         bioAuthAvailable = false;
@@ -93,8 +93,8 @@ class Auth with ChangeNotifier {
 
     String authValue = '';
 
-    await FlutterLocker.retrieve(RetrieveSecretRequest('bioauth',
-            AndroidPrompt('Authenticate', 'Cancel'), IOsPrompt('Authenticate')))
+    await FlutterLocker.retrieve(RetrieveSecretRequest(key: 'bioauth',
+            androidPrompt: AndroidPrompt(title:'Authenticate', cancelLabel: 'Cancel'), iOsPrompt: IOsPrompt(touchIdText: 'Authenticate')))
         .then((value) {
       if (value.isEmpty){
         return false;
