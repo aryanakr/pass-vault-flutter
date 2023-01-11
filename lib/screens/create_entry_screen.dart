@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pass_vault/providers/password_entries.dart';
 import 'package:pass_vault/widgets/entry_form.dart';
@@ -19,31 +21,49 @@ class CreateEntryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<void> submit() async {
-      await Provider.of<PasswordEntries>(context, listen: false)
+    void submit() {
+      Provider.of<PasswordEntries>(context, listen: false)
           .addPasswordEntry(
         title: formData['title']!,
         actualPassword: formData['password']!,
         website: formData['website']!,
         username: formData['username']!,
-        email:  formData['email']!,
+        email: formData['email']!,
         description: formData['description']!,
       );
       Navigator.of(context).pop();
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Create Entry'),
-      ),
-      body: Padding(
+    final Widget body = SafeArea(
+      child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: EntryFormWidget(
           formData: formData,
           passwordController: passwordController,
-          submit: submit,
+          submit: () => submit(),
         ),
       ),
     );
+
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            navigationBar: CupertinoNavigationBar(
+                middle: const Text('Create Entry'),
+                trailing: CupertinoButton(
+                  onPressed: submit,
+                  child: const Icon(CupertinoIcons.check_mark),
+                )),
+            child: body)
+        : Scaffold(
+            appBar: AppBar(
+              title: const Text('Create Entry'),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.save),
+                  onPressed: submit,
+                )
+              ],
+            ),
+            body: body);
   }
 }

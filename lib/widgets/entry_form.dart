@@ -1,10 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pass_vault/widgets/adaptive/adaptive_text_form_field.dart';
 import 'package:pass_vault/widgets/password_generator.dart';
 
 class EntryFormWidget extends StatefulWidget {
   final Map<String, String> formData;
   final TextEditingController passwordController;
-  final Future<void> Function() submit;
+  final void Function() submit;
 
   EntryFormWidget({
     required this.formData,
@@ -36,7 +38,7 @@ class _EntryFormWidgetState extends State<EntryFormWidget> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            TextFormField(
+            AdaptiveTextFormField(
               initialValue: widget.formData['title'],
               decoration: const InputDecoration(
                   labelText: 'Title', suffixIcon: Icon(Icons.title)),
@@ -51,7 +53,7 @@ class _EntryFormWidgetState extends State<EntryFormWidget> {
                 widget.formData['title'] = value!;
               },
             ),
-            TextFormField(
+            AdaptiveTextFormField(
               initialValue: widget.formData['website'],
               decoration: const InputDecoration(
                   labelText: 'Website', suffixIcon: Icon(Icons.link)),
@@ -60,7 +62,7 @@ class _EntryFormWidgetState extends State<EntryFormWidget> {
                 widget.formData['website'] = value!;
               },
             ),
-            TextFormField(
+            AdaptiveTextFormField(
               initialValue: widget.formData['email'],
               decoration: const InputDecoration(
                   labelText: 'E-Mail', suffixIcon: Icon(Icons.email)),
@@ -69,7 +71,7 @@ class _EntryFormWidgetState extends State<EntryFormWidget> {
                 widget.formData['email'] = value!;
               },
             ),
-            TextFormField(
+            AdaptiveTextFormField(
               initialValue: widget.formData['username'],
               decoration: const InputDecoration(
                   labelText: 'Username', suffixIcon: Icon(Icons.face)),
@@ -81,7 +83,7 @@ class _EntryFormWidgetState extends State<EntryFormWidget> {
             const SizedBox(height: 8.0,),
             PasswordGeneratorWidget(widget.passwordController),
             const SizedBox(height: 8.0,),
-            TextFormField(
+            AdaptiveTextFormField(
               initialValue: widget.formData['description'],
               minLines: 1,
               maxLines: 5,

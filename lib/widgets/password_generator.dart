@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pass_vault/widgets/adaptive/adaptive_spin_box.dart';
+import 'package:pass_vault/widgets/adaptive/adaptive_text_field.dart';
 
 import 'package:random_password_generator/random_password_generator.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
@@ -38,7 +40,7 @@ class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
     return Row(
       children: [
         Text(label),
-        Switch(value: val, onChanged: update),
+        Switch.adaptive(value: val, onChanged: update),
       ],
     );
   }
@@ -60,12 +62,10 @@ class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextField(
+        AdaptiveTextField(
           controller: widget.textFieldController,
-          decoration: const InputDecoration(
-            labelText: 'Password',
-            suffixIcon: Icon(Icons.password),
-          ),
+          label: 'Password',
+          suffix: const Icon(Icons.password),
           keyboardType: TextInputType.visiblePassword,
         ),
         Card(
@@ -111,7 +111,7 @@ class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
               ),
               SizedBox(
                 width: 250.0,
-                child: SpinBox(
+                child: AdaptiveSpinBox(
                   decoration: const InputDecoration(labelText: 'Length',),
                   min: 1,
                   max: 30,

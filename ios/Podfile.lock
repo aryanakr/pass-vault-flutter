@@ -1,0 +1,53 @@
+PODS:
+  - Flutter (1.0.0)
+  - flutter_locker (0.0.1):
+    - Flutter
+    - Locker (~> 3.0.1)
+  - flutter_secure_storage (6.0.0):
+    - Flutter
+  - FMDB (2.7.5):
+    - FMDB/standard (= 2.7.5)
+  - FMDB/standard (2.7.5)
+  - Locker (3.0.2)
+  - sqflite (0.0.2):
+    - Flutter
+    - FMDB (>= 2.7.5)
+  - string_encryption (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - flutter_locker (from `.symlinks/plugins/flutter_locker/ios`)
+  - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - sqflite (from `.symlinks/plugins/sqflite/ios`)
+  - string_encryption (from `.symlinks/plugins/string_encryption/ios`)
+
+SPEC REPOS:
+  trunk:
+    - FMDB
+    - Locker
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  flutter_locker:
+    :path: ".symlinks/plugins/flutter_locker/ios"
+  flutter_secure_storage:
+    :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  sqflite:
+    :path: ".symlinks/plugins/sqflite/ios"
+  string_encryption:
+    :path: ".symlinks/plugins/string_encryption/ios"
+
+SPEC CHECKSUMS:
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_locker: 2d1b2e426eecaff7999596ff6cae78e1659e72df
+  flutter_secure_storage: 23fc622d89d073675f2eaa109381aefbcf5a49be
+  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  Locker: c4a5ed027ee0a6336e3f59de1237e89d3486d152
+  sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
+  string_encryption: b639545433d5089f642368701643ff942e0e770c
+
+PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3
+
+COCOAPODS: 1.11.3

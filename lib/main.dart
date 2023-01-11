@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pass_vault/providers/auth.dart';
 import 'package:pass_vault/providers/password_entries.dart';
@@ -37,9 +40,23 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: Consumer<Auth>(
-        builder: (ctx, auth, _) => MaterialApp(
+        builder: (ctx, auth, _) => Platform.isIOS ? CupertinoApp(
           title: 'PassVault',
-          theme: AppTheme.bulildLightThme(),
+          theme: AppTheme.buildCupertinoTheme(),
+          debugShowCheckedModeBanner: false,
+          home: auth.isAuth ? PasswordsScreen() : _appEntryScreen(),
+          routes: {
+            AuthInitScreen.routeName: (ctx) => AuthInitScreen(),
+            CreateEntryScreen.routeName: (ctx) => CreateEntryScreen(),
+            EntryDetailScreen.routeName: (ctx) => EntryDetailScreen(),
+            PasswordsScreen.routeName: (ctx) => PasswordsScreen(),
+            EditEntryScreen.routeName: (ctx) => EditEntryScreen(),
+            LoginScreen.routeName: (ctx) => LoginScreen(),
+          },
+        ) 
+        : MaterialApp(
+          title: 'PassVault',
+          theme: AppTheme.bulildLightThme,
           darkTheme: AppTheme.buildDarkTheme(),
           themeMode: ThemeMode.system, 
           debugShowCheckedModeBanner: false,
